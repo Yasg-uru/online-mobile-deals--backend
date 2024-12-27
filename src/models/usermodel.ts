@@ -13,7 +13,7 @@ export interface User extends Document {
   verifyCode: string;
   isVerified: boolean;
   verifyCodeExpiry: Date;
-  Role: "student" | "admin" | "instructor";
+  Role: "user" | "admin" ;
 
   ResetPasswordToken: string | undefined;
   ResetPasswordTokenExpire: Date | undefined;
@@ -66,8 +66,8 @@ const userSchema = new Schema<User>(
     },
     Role: {
       type: String,
-      enum: ["student", "instructor", "admin"],
-      default: "student",
+      enum: ["user", "admin"],
+      default: "user",
     },
 
     ResetPasswordToken: {
