@@ -16,13 +16,13 @@ export interface IProduct extends Document {
     | "Others";
   source: "string";
   affiliateLink: string;
-  productUrl: string;
+
   images: string[];
   ratings: {
     averageRating: number;
     totalRatings: number;
   };
-  stock: number;
+
   keywords: string[];
   clicks: number;
   addedBy?: mongoose.Types.ObjectId;
@@ -92,10 +92,6 @@ const ProductSchema: Schema<IProduct> = new mongoose.Schema(
           `${props.value} is not a valid URL!`,
       },
     },
-    productUrl: {
-      type: String,
-      required: true,
-    },
 
     // Metadata
     images: {
@@ -118,10 +114,6 @@ const ProductSchema: Schema<IProduct> = new mongoose.Schema(
         type: Number,
         default: 0,
       },
-    },
-    stock: {
-      type: Number,
-      default: 0, // Available stock
     },
 
     // SEO and Analytics

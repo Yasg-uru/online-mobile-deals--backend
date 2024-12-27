@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import userRouter from "./route/user.route";
 
 import { ErrorhandlerMiddleware } from "./util/Errorhandler.util";
+import productRouter from "./route/product.route";
 const app = express();
 
 app.use(
@@ -24,7 +25,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use("/user", userRouter);
-
+app.use("/product", productRouter);
 app.use(ErrorhandlerMiddleware);
 
 dotenv.config();
