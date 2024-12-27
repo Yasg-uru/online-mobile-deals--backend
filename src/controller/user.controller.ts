@@ -238,49 +238,4 @@ export const Resetpassword = catchAsync(
 );
 
 
-export const LoadProgress = catchAsync(
-  async (req: reqwithuser, res: Response, next: NextFunction) => {
-    try {
-      const userId = req.user?._id;
-      const { courseId } = req.params;
 
-      const user = await usermodel.findById(userId);
-      if (!user) {
-        return next(new Errorhandler(404, "User not found"));
-      }
-      const EnrolledCourse = user.EnrolledCourses.find(
-        (course) => course.courseId.toString() === courseId.toString()
-      );
-      if (!EnrolledCourse) {
-        return next(new Errorhandler(404, "user not enrolled to this course "));
-      }
-
-      res.status(200).json({
-        success: true,
-        message: "successfully fetched your progress to the particular course",
-        EnrolledCourse,
-      });
-    } catch (error: any) {
-      return next(new Errorhandler(500, "Internal server Error "));
-    }
-  }
-);
-export const getAllEnrolledCourseProgress = catchAsync(
-  async (req: reqwithuser, res: Response, next: NextFunction) => {
-    try {
-      const userId = req.user?._id;
-      const user = await usermodel.findById(userId);
-      if (!user) {
-        return next(new Errorhandler(404, "User not found "));
-      }
-      const EnrolledCourses = user.EnrolledCourses;
-      res.status(200).json({
-        success: true,
-        message: "Successfully fetched enrolled courses",
-        EnrolledCourses,
-      });
-    } catch (error: any) {
-      return next(new Errorhandler(500, "Internal server Error "));
-    }
-  }
-);
