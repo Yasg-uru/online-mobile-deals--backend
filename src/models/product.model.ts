@@ -23,7 +23,7 @@ export interface IProduct extends Document {
     totalRatings: number;
   };
 
-  keywords: string[];
+
   clicks: number;
   addedBy?: mongoose.Types.ObjectId;
   createdAt?: Date;
@@ -116,11 +116,7 @@ const ProductSchema: Schema<IProduct> = new mongoose.Schema(
       },
     },
 
-    // SEO and Analytics
-    keywords: {
-      type: [String], // Tags or keywords for search optimization
-      default: [],
-    },
+   
     clicks: {
       type: Number,
       default: 0, // Number of times the product link has been clicked
@@ -159,7 +155,7 @@ ProductSchema.methods.incrementClicks = async function (): Promise<void> {
 };
 
 // Index for Search Optimization
-ProductSchema.index({ title: "text", description: "text", keywords: 1 });
+ProductSchema.index({ title: "text", description: "text" });
 
 // Export the model
 export const Product: IProductModel = mongoose.model<IProduct, IProductModel>(

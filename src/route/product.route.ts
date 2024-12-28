@@ -9,17 +9,18 @@ productRouter.post(
   ProductController.addProduct
 );
 productRouter.put(
-  "/update-product",
+  "/update-product/:productId",
   isAuthenticated,
   authorization(["admin"]),
   ProductController.UpdateProducts
 );
 productRouter.delete(
-  "/delete-product",
+  "/delete-product/:productId",
   isAuthenticated,
   authorization(["admin"]),
   ProductController.deleteProduct
 );
 productRouter.get("/search-product", ProductController.getProducts);
-productRouter.get("/increament-views", ProductController.increamentClicks);
+productRouter.get("/get-products", ProductController.getproductsbypagination);
+productRouter.post("/increament-views/:productId", ProductController.increamentClicks);
 export default productRouter;

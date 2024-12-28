@@ -5,7 +5,7 @@ import { reqwithuser } from "../middleware/auth.middleware";
 
 class ProductController {
   public static async addProduct(
-    req: Request,
+    req: reqwithuser,
     res: Response,
     next: NextFunction
   ): Promise<void> {
@@ -21,8 +21,6 @@ class ProductController {
         affiliateLink,
         images,
         ratings,
-        keywords,
-        addedBy,
       } = req.body;
 
       // Create a new product instance
@@ -36,8 +34,8 @@ class ProductController {
         affiliateLink,
         images,
         ratings,
-        keywords,
-        addedBy,
+
+        addedBy: req.user?._id,
       });
 
       // Save the product to the database
@@ -111,13 +109,68 @@ class ProductController {
 
       if (category) filterConditions.category = category;
       if (source) filterConditions.source = source;
-      if (keywords)
-        filterConditions.keywords = { $in: (keywords as string).split(",") };
 
       const products = await Product.find(filterConditions);
       res.status(200).json(products);
     } catch (error) {
       next(error);
+    }
+  }
+  public static async getproductsbypagination(
+    req: reqwithuser,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      // Extract query parameters
+      const {
+        page = 1,
+        limit = 10,
+        category,
+        search,
+        sortBy = "createdAt",
+        order = "desc",
+      } = req.query;
+
+      // Convert pagination parameters to numbers
+      const pageNumber = Number(page);
+      const limitNumber = Number(limit);
+
+      // Build the query object
+      const query: any = {};
+
+      if (category && category !== "all") {
+        query.category = category;
+      }
+
+      if (search) {
+        query.$text = { $search: search as string };
+      }
+
+      // Calculate pagination parameters
+      const skip = (pageNumber - 1) * limitNumber;
+
+      // Fetch paginated products
+      const products = await Product.find(query)
+        .sort({ [sortBy as string]: order === "asc" ? 1 : -1 })
+        .skip(skip)
+        .limit(limitNumber);
+
+      // Get total count for pagination metadata
+      const total = await Product.countDocuments(query);
+
+      // Return response
+      res.status(200).json({
+        success: true,
+        data: products,
+        meta: {
+          currentPage: pageNumber,
+          totalPages: Math.ceil(total / limitNumber),
+          totalItems: total,
+        },
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "Server Error", error });
     }
   }
   public static async increamentClicks(

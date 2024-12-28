@@ -13,7 +13,7 @@ export interface User extends Document {
   verifyCode: string;
   isVerified: boolean;
   verifyCodeExpiry: Date;
-  Role: "user" | "admin" ;
+  Role: "user" | "admin";
 
   ResetPasswordToken: string | undefined;
   ResetPasswordTokenExpire: Date | undefined;

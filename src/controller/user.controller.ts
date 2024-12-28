@@ -10,7 +10,7 @@ import Errorhandler from "../util/Errorhandler.util";
 import sendtoken from "../util/sendtoken";
 import { reqwithuser } from "../middleware/auth.middleware";
 import { Schema, ObjectId } from "mongoose";
-
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 export const registerUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -138,36 +138,38 @@ export const verifyuser = catchAsync(
   }
 );
 
-export const Login = catchAsync(async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    console.log("this is a req.body:", req.body);
-    if (!email || !password) {
-      return next(new Errorhandler(404, "Please Enter credentials"));
+export const Login = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email, password } = req.body;
+      console.log("this is a req.body:", req.body);
+      if (!email || !password) {
+        return next(new Errorhandler(404, "Please Enter credentials"));
+      }
+      const user = await usermodel.findOne({ email });
+      if (!user) {
+        return next(new Errorhandler(404, "Invalid credentials"));
+      }
+      if (!user.isVerified) {
+        return next(
+          new Errorhandler(
+            400,
+            "Access denied, Please verify your account first "
+          )
+        );
+      }
+      const isCorrectPassword = await user.comparePassword(password);
+      if (!isCorrectPassword) {
+        return next(new Errorhandler(404, "Invalid credentials"));
+      }
+      const token = user.generateToken();
+      sendtoken(res, token, 200, user);
+    } catch (error: any) {
+      console.log("Error Login", error);
+      return next(new Errorhandler(500, "Internal server Error "));
     }
-    const user = await usermodel.findOne({ email });
-    if (!user) {
-      return next(new Errorhandler(404, "Invalid credentials"));
-    }
-    if (!user.isVerified) {
-      return next(
-        new Errorhandler(
-          400,
-          "Access denied, Please verify your account first "
-        )
-      );
-    }
-    const isCorrectPassword = await user.comparePassword(password);
-    if (!isCorrectPassword) {
-      return next(new Errorhandler(404, "Invalid credentials"));
-    }
-    const token = user.generateToken();
-    sendtoken(res, token, 200, user);
-  } catch (error: any) {
-    console.log("Error Login", error);
-    return next(new Errorhandler(500, "Internal server Error "));
   }
-});
+);
 export const Logout = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     res
@@ -236,6 +238,24 @@ export const Resetpassword = catchAsync(
     }
   }
 );
-
-
-
+export const getuserByToken = catchAsync(
+  async (req: reqwithuser, res: Response, next: NextFunction) => {
+    try {
+      const { token } = req.params;
+      const decodedData = jwt.verify(
+        token,
+        process.env.JWT_SECRET as string
+      ) as JwtPayload;
+      const user = await usermodel.findById(decodedData.id);
+      if (!user) {
+        return next(new Errorhandler(404, "please login to continue"));
+      }
+      res.status(200).json({
+        success: true,
+        user,
+      });
+    } catch (error) {
+      next(new Errorhandler(500, "Internal server Error"));
+    }
+  }
+);
