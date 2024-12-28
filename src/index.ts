@@ -12,10 +12,11 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://192.168.137.13:8081",
+    
       "http://localhost:5173",
-      "http://localhost:5174",
-      "https://procoders-frontend.vercel.app",
+      "https://onlinemobiledeals-com-frontend.vercel.app"
+      
+      
     ], // The IP address where your Expo app is running
     credentials: true,
   })
