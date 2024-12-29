@@ -14,10 +14,8 @@ const product_route_1 = __importDefault(require("./route/product.route"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
     origin: [
-        "http://192.168.137.13:8081",
         "http://localhost:5173",
-        "http://localhost:5174",
-        "https://procoders-frontend.vercel.app",
+        "https://onlinemobiledealscom.vercel.app"
     ], // The IP address where your Expo app is running
     credentials: true,
 }));
