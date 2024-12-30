@@ -18,6 +18,7 @@ app.use((0, cors_1.default)({
         "https://onlinemobiledealscom.vercel.app",
         'https://onlinemobiledeals-com-frontend.vercel.app',
         'https://onlinemobiledeals.com',
+        'https://www.onlinemobiledeals.com'
     ], // The IP address where your Expo app is running
     credentials: true,
 }));
