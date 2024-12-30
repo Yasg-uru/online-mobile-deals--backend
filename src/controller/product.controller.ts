@@ -150,7 +150,7 @@ class ProductController {
       // Calculate pagination parameters
       const skip = (pageNumber - 1) * limitNumber;
 
-      // Fetch paginated products
+      // Fetch paginated products and we cant able
       const products = await Product.find(query)
         .sort({ [sortBy as string]: order === "asc" ? 1 : -1 })
         .skip(skip)

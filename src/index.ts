@@ -14,7 +14,10 @@ app.use(
     origin: [
     
       "http://localhost:5173",
-     "https://onlinemobiledealscom.vercel.app"
+     "https://onlinemobiledealscom.vercel.app",
+     'https://onlinemobiledeals-com-frontend.vercel.app',
+     'https://onlinemobiledeals.com',
+     
     ], // The IP address where your Expo app is running
     credentials: true,
   })
