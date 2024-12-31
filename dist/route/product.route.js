@@ -13,4 +13,5 @@ productRouter.delete("/delete-product/:productId", auth_middleware_1.isAuthentic
 productRouter.get("/search-product", product_controller_1.default.getProducts);
 productRouter.get("/get-products", product_controller_1.default.getproductsbypagination);
 productRouter.post("/increament-views/:productId", product_controller_1.default.increamentClicks);
+productRouter.get("/product/:productId", product_controller_1.default.getProductById);
 exports.default = productRouter;

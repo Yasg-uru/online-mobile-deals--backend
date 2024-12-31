@@ -164,5 +164,22 @@ class ProductController {
             }
         });
     }
+    static getProductById(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { productId } = req.params;
+                const product = yield product_model_1.Product.findById(productId);
+                if (!product) {
+                    return next(new Errorhandler_util_1.default(404, "product not found"));
+                }
+                res.status(200).json({
+                    product,
+                });
+            }
+            catch (error) {
+                next(new Errorhandler_util_1.default(500, "internal server error"));
+            }
+        });
+    }
 }
 exports.default = ProductController;

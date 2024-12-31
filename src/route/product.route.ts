@@ -22,5 +22,10 @@ productRouter.delete(
 );
 productRouter.get("/search-product", ProductController.getProducts);
 productRouter.get("/get-products", ProductController.getproductsbypagination);
-productRouter.post("/increament-views/:productId", ProductController.increamentClicks);
+productRouter.post(
+  "/increament-views/:productId",
+  ProductController.increamentClicks
+);
+productRouter.get("/product/:productId", ProductController.getProductById);
+
 export default productRouter;
